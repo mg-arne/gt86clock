@@ -7,27 +7,38 @@ U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/
 
 #include <mcp_can.h>  
 #include <SPI.h>   
-#define CAN0_INT 16            // Set Interupt zu pin D2
+#define CAN0_INT 16           // Set Interupt zu pin D2
 MCP_CAN CAN0(15);             // Set CS to pin 15 (D8 on my NodeMCU)
 
 #include <EEPROM.h>
 #include "DS3231.h"
+
+#include <base64.h>
 
 RTClib RTC;
 DS3231 Clock;
 
 #include "logos.h"
 
-int buttonMode=2;            // pin number of mode button
-int buttonModePressed=-6000; // whether the mode button is pressed
-int buttonHour=0;            // pin number of hour button
-int buttonHourPressed=0;     // whether the hour button is pressed
-int buttonMinute=10;         // pin number of minute button
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>
+#include <FS.h>
+ESP8266WebServer server(80);
+
+#include <RingBuf.h>
+RingBuf<int8_t, 240> coolantBuffer;
+RingBuf<int8_t, 240> oilBuffer;
+
+#include <NTPtimeESP.h>
+NTPtime NTPch("ch.pool.ntp.org");
+DateTime now;
+strDateTime dateTime;
+
 int buttonPin1=2;
 int buttonPin2=0;
 int buttonPin1Pressed=-1;     // whether the hour button is pressed
 int buttonPin2Pressed=-1;     // whether the hour button is pressed
-int buttonMinutePressed=0;   // whether the minute button is pressed
 int clockHour=8;
 int clockMinute=30;
 int coolantTemp;
@@ -44,13 +55,13 @@ bool clockRefresh=false;
 bool clock24h=true;           //true=24h, false=12h
 bool pm;                      //true=pm, false=am
 bool drawDots=false;
-bool oilPressureBar=true;     //true=Bar, false=Psi
-bool tempC=true;              //true=Celsius, false=Fahrenheit
+bool pressureBar=true;     //true=Bar, false=Psi
+bool temperatureCelsius=true;              //true=Celsius, false=Fahrenheit
 bool readyForModeChange=true;
 bool updateCompleteDisplay=true;
 
 float afr=14.6;
-float bat=-1;
+float voltage=-1;
 float oilPressure;
 float oilPressureOld;
 float oilPressureOffset=114;
@@ -58,3 +69,11 @@ float oilPressureScalingFactor=0.172018348623853;
 
 unsigned char len = 0;
 unsigned char buf[12];
+
+
+//int buttonMode=2;            // pin number of mode button
+//int buttonModePressed=-6000; // whether the mode button is pressed
+//int buttonHour=0;            // pin number of hour button
+//int buttonHourPressed=0;     // whether the hour button is pressed
+//int buttonMinute=10;         // pin number of minute button
+//int buttonMinutePressed=0;   // whether the minute button is pressed

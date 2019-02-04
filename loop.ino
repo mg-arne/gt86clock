@@ -1,9 +1,11 @@
 void loop(void) { 
 
   handleModeButton();
+
+  now = RTC.now();
+  server.handleClient(); //Handling of incoming requests
   
   // update oil temp test values
-  DateTime now = RTC.now();
   if ( modeCurrent == 1 ||  modeCurrent == 2 || modeCurrent == 3 )
   {
     if(CAN_MSGAVAIL == CAN0.checkReceive())            
@@ -14,12 +16,17 @@ void loop(void) {
       {
         oilTemp     = buf[2]-40; 
         coolantTemp = buf[3]-40;              
+     
+        oilBuffer.push(oilTemp);
+        coolantBuffer.push(coolantTemp);
           
-        if ( ! tempC )
+     /*   if ( ! temperatureCelsius )
         {
           oilTemp=round(oilTemp*1.8+32);
-          coolantTemp=round(coolantTemp*1.8+32);
-        }
+        //  coolantTemp=round(coolantTemp*1.8+32);
+        }*/
+
+        lastTempUpdate=millis();
       }   
 
       if ( oilTemp < -39 || oilTemp > 320 )
@@ -31,8 +38,7 @@ void loop(void) {
       {
          coolantTemp=999;
       }
-      
-      lastTempUpdate=millis();
+      coolantTemp=random(180)-40;
     }
   }
   else if ( modeCurrent == 4 )
@@ -41,7 +47,7 @@ void loop(void) {
     if ( oilPressureOld < oilPressureOffset ) { oilPressureOld = oilPressureOffset; }
     //get the value and scale it
     oilPressure=float((oilPressureOld-oilPressureOffset)*oilPressureScalingFactor);
-    if ( oilPressureBar )
+    if ( pressureBar )
     {
       oilPressure=oilPressure*0.0689476;
       oilPressure=float(round(oilPressure*10))/10;
@@ -85,11 +91,11 @@ void loop(void) {
       }
       else if ( rxId = 0x142 )
       {
-        bat = (buf[3]*256+buf[4])/1000; //aka ((A*256)+B)/1000 ;      
-        bat = float(round(bat*10))/10;
-        if ( bat < 5 || bat > 16 )
+        voltage = (buf[3]*256+buf[4])/1000; //aka ((A*256)+B)/1000 ;      
+        voltage = float(round(voltage*10))/10;
+        if ( voltage < 5 || voltage > 16 )
         {
-          bat=-1;  
+          voltage=-1;  
         }
       }
     }
@@ -114,6 +120,28 @@ void loop(void) {
     }
   }
 
+    // no dot, if we have recent data
+  if ( millis() - lastTempUpdate < 10*1000 )
+  {
+     u8g2.setDrawColor(0); 
+     u8g2.drawCircle(1,1,1);
+     u8g2.setDrawColor(1);  
+  }
+  else
+  {
+     u8g2.drawCircle(69,31,1);
+  }
+    // no dot, if we have recent data
+  if ( millis() - lastTempUpdate < 10*1000 )
+  {
+     u8g2.setDrawColor(0); 
+     u8g2.drawCircle(1,1,1);
+     u8g2.setDrawColor(1);  
+  }
+  else
+  {
+     u8g2.drawCircle(1,1,1);
+  }
   // check for complete refresh or just updated values
   if ( modeOld != modeCurrent || clockRefresh == true )
   {
@@ -144,11 +172,16 @@ void loop(void) {
     drawClock(updateCompleteDisplay);
     break;
   case 6:
-    drawAfrAndBat(updateCompleteDisplay);
+    drawAfrAndVoltage(updateCompleteDisplay);
+    break;
+  case 7:
+    drawSettings(updateCompleteDisplay);
     break;
   default:
     drawLogo(updateCompleteDisplay);
   }
 
   readyForModeChange = true;
+
+
 }

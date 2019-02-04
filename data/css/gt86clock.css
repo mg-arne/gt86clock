@@ -1,0 +1,41 @@
+a:link {
+  color: #191970;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #191970;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #696969;
+  text-decoration: none;
+}
+
+a:active {
+  color: #696969;
+  text-decoration: none;
+}
+
+h1 {
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: .3em;
+  font-size: 2em;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+
+#github {
+  width: 100%;
+  text-align: right;
+}

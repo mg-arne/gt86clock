@@ -5,7 +5,7 @@ void handleModeButton()
   {
     if ( modeCurrent == 5 && clockRefresh == false )
     { 
-      buttonHourPressed=0;
+     // buttonHourPressed=0;
       clockHour++;
       clockHour = clockHour % 24;
       Clock.setHour(clockHour);
@@ -19,7 +19,7 @@ void handleModeButton()
   {
     if ( modeCurrent == 5 && clockRefresh == false )
     { 
-      buttonMinutePressed=0;
+     // buttonMinutePressed=0;
       clockMinute++;
       clockMinute = clockMinute % 60;
       Clock.setMinute(clockMinute);
@@ -49,20 +49,20 @@ void handleModeButton()
   {
      if ( modeCurrent == 1 || modeCurrent == 2 || modeCurrent == 3  ) //oil+coolant temp
      {
-        tempC = !tempC;
+        temperatureCelsius = !temperatureCelsius;
         modeOld = 0; // force refresh
         buttonPin1Pressed=-1; 
         buttonPin2Pressed=-1; 
-        EEPROM.put(0, tempC);
+        EEPROM.put(0, temperatureCelsius);
         EEPROM.commit();
      }
      else if ( modeCurrent == 4 ) //oil pressure
      {
-        oilPressureBar = !oilPressureBar;
+        pressureBar = !pressureBar;
         modeOld = 0; // force refresh
         buttonPin1Pressed=-1; 
         buttonPin2Pressed=-1; 
-        EEPROM.put(1, oilPressureBar);
+        EEPROM.put(1, pressureBar);
         EEPROM.commit();
      }
      else if ( modeCurrent == 5 ) //clock

@@ -1,4 +1,4 @@
-void setup(void) { 
+void setup(void) {   
   u8g2.begin();// Oled display begins  
   u8g2.setFlipMode(1);
 
@@ -6,10 +6,9 @@ void setup(void) {
 
   Serial.begin(115200);
    
-  pinMode(A0,           INPUT);
-  pinMode(buttonPin1,   INPUT_PULLUP);
-  pinMode(buttonPin2,   INPUT_PULLUP);
- // pinMode(buttonMinute, INPUT_PULLUP);
+  pinMode(A0,           INPUT);         // oil pressure
+  pinMode(buttonPin1,   INPUT_PULLUP);  // muxed for the 3 buttons
+  pinMode(buttonPin2,   INPUT_PULLUP);  // muxed for the 3 buttons
 
   // falling = down = pressed
   // rising  = up   = release
@@ -21,10 +20,10 @@ void setup(void) {
   byte tmp;
   int addr=0;
   EEPROM.get(addr,tmp);
-  tempC = bitRead(tmp,0);
+  temperatureCelsius = bitRead(tmp,0);
   addr++;
   EEPROM.get(addr,tmp);
-  oilPressureBar = bitRead(tmp,0);
+  pressureBar = bitRead(tmp,0);
   addr++;
   EEPROM.get(addr,tmp);
   clock24h = bitRead(tmp,0);
@@ -50,7 +49,24 @@ void setup(void) {
   CAN0.init_Filt(2,0,0x07E80000);        // OBD
   CAN0.init_Filt(3,0,0x03600000);        // Water / Oil
   CAN0.init_Filt(4,0,0x01340000);        // AFR
-  CAN0.init_Filt(5,0,0x01420000);        // Battery
+  CAN0.init_Filt(5,0,0x01420000);        // Voltagetery
 
   CAN0.setMode(MCP_NORMAL);
+
+  WiFiManager wifiManager;
+  wifiManager.autoConnect("gt86clock");
+
+  server.begin();
+  
+  server.on("/", handleSpecificArg);   
+  server.on("/date.json", handleDateJson);
+  server.on("/temperature.json", handleTemperatureJson);
+
+  SPIFFS.begin();
+  
+  server.onNotFound([]() {
+    if (!handleFileRead(server.uri())) {
+      server.send(404, "text/plain", "FileNotFound");
+    }
+  });
 }
