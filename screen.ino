@@ -1,7 +1,6 @@
 void drawAfrAndVoltage(bool updateCompleteDisplay)
 { 
-
-  if ( afrLambda )
+  if ( o2afr )
   {
     char afrChar[4];
     dtostrf(afr,1,1,afrChar);
@@ -66,6 +65,7 @@ void drawOilPressure(bool updateCompleteDisplay)
 
   delay(250);
 }
+
 void drawLogo(bool updateCompleteDisplay)
 {   
    if ( updateCompleteDisplay == true )
