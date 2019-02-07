@@ -72,8 +72,8 @@ void syncNTP()
 
 boolean setIfBool(String varName) {
   if ( server.arg(varName) == "false" || server.arg(varName) == "true"  ) {     
-    clock24h = server.arg(varName);
     modeOld = 0; 
+    return server.arg(varName);
   }
 }
 
