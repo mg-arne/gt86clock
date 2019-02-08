@@ -36,9 +36,8 @@ void handleModeButton()
     modeCurrent++;
     // there is only mode 0-6 availble, logo only on start
     if ( modeCurrent > 6 )
-    {
-      modeCurrent = 1;  
-    }
+      modeCurrent = 1;
+        
     buttonPin1Pressed=-1; 
     buttonPin2Pressed=-1; 
     lastModeChange = millis();
@@ -69,13 +68,10 @@ void handleModeButton()
     {
       clock24h = !clock24h;
       if ( clock24h && pm )
-      {
         clockHour+=12;
-      }
       else
-      {
         clockHour-=12;
-      }
+        
       Clock.setHour(clockHour);
       clockRefresh = true;
       buttonPin1Pressed=-1; 

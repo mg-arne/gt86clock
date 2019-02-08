@@ -29,15 +29,8 @@ void loop(void) {
         lastTempUpdate=millis();
       }   
 
-      if ( oilTemp < -39 || oilTemp > 320 )
-      {
-         oilTemp=999;
-      }
-       
       if ( coolantTemp < -39 || coolantTemp > 320 )
-      {
-         coolantTemp=999;
-      }
+        coolantTemp=999;
       coolantTemp=random(180)-40;
     }
   }
@@ -94,9 +87,7 @@ void loop(void) {
         voltage = (buf[3]*256+buf[4])/1000; //aka ((A*256)+B)/1000 ;      
         voltage = float(round(voltage*10))/10;
         if ( voltage < 5 || voltage > 16 )
-        {
           voltage=-1;  
-        }
       }
     }
     else
@@ -107,16 +98,12 @@ void loop(void) {
     if ( o2afr )
     {
       if ( afr < -40 || afr > 320 )
-      {
         afr=999;
-      }
     } else {
       afr=float(round((afr/14.7)*100))/100;
       
       if ( afr < -0.2 || afr > 2 )
-      {
         afr=-1;
-      }
     }
   }
 

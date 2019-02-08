@@ -20,7 +20,8 @@ void drawSettings(bool updateCompleteDisplay)
     if ( clock24h ) 
       u8g2.drawStr(1,32,"CLOCK: 24h");       
     else
-      u8g2.drawStr(1,32,"CLOCK: 12h");      
+      u8g2.drawStr(1,32,"CLOCK: 12h");
+            
     u8g2.sendBuffer(); 
     delay(2000);  
      
@@ -29,10 +30,12 @@ void drawSettings(bool updateCompleteDisplay)
       u8g2.drawStr(1,16,"TEMP.: C"); 
     else
       u8g2.drawStr(1,16,"TEMP.: F"); 
+      
     if ( pressureBar )
       u8g2.drawStr(1,32,"PRESSURE: bar");
     else
       u8g2.drawStr(1,32,"PRESSURE: psi"); 
+      
     u8g2.sendBuffer(); 
     delay(2000);
           
@@ -41,6 +44,7 @@ void drawSettings(bool updateCompleteDisplay)
       u8g2.drawStr(1,16,"O2: AFR");
     else
       u8g2.drawStr(1,16,"O2: Lambda");
+      
     u8g2.sendBuffer(); 
     delay(2000);   
    }

@@ -8,18 +8,15 @@ void updateDisplay(void * parameter) {
       u8g2.setDrawColor(1);  
     }
     else
-    {
       u8g2.drawCircle(1,1,1);
-    }
     
     // check for complete refresh or just updated values
     if ( modeOld != modeCurrent || clockRefresh == true )
     {
       updateCompleteDisplay = true;
       modeOld = modeCurrent; 
-    } else {
+    } else
       updateCompleteDisplay = false;  
-    }
 
     // refresh display
     switch (modeCurrent) {

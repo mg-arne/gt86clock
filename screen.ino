@@ -138,9 +138,7 @@ void drawTwoValues(int iconUpWidth, int iconUpHeight, unsigned char iconUpBits[]
       u8g2.drawStr(116,32,unitDown);
     }
     else if ( unitDown == "V" )
-    {
       u8g2.drawStr(116,32,unitDown);
-    }
   }
 
   u8g2.setDrawColor(0);

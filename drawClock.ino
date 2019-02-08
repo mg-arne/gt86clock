@@ -26,9 +26,9 @@ void drawClock(bool updateCompleteDisplay)
     }*/
       
     u8g2.setFont(u8g2_font_logisoso32_tn);
-    if ( clockHour>9 ) {
+    if ( clockHour>9 )
       u8g2.drawStr(37-37,32,String(clockHour).c_str());
-    } else {
+    else {
       u8g2.drawStr(37-37,32,"0");
       u8g2.drawStr(57-37,32,String(clockHour).c_str());
     }
@@ -39,7 +39,6 @@ void drawClock(bool updateCompleteDisplay)
       u8g2.drawStr(104-37,32,String(clockMinute).c_str());
     }
     clockRefresh = false;
-   
   }  
 
   u8g2.setDrawColor(drawDots);
