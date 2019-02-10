@@ -1,14 +1,9 @@
-#if CONFIG_FREERTOS_UNICORE
-  #define ARDUINO_RUNNING_CORE 0
-#else
-  #define ARDUINO_RUNNING_CORE 1
-#endif
-
 #include <U8g2lib.h> 
+
 #ifdef U8X8_HAVE_HW_I2C 
   #include <Wire.h> 
 #endif 
-U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ U8X8_PIN_NONE);
+U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE, /* clock=*/ SCL, /* data=*/ SDA);
 
 #include <mcp_can.h>  
 #include <SPI.h>   
@@ -17,7 +12,6 @@ MCP_CAN CAN0(15);             // Set CS to pin 15 (D8 on my NodeMCU)
 
 #include <EEPROM.h>
 #include "DS3231.h"
-#include "SPIFFS.h"
 
 #include <base64.h>
 
@@ -26,10 +20,10 @@ DS3231 Clock;
 
 #include "logos.h"
 
-#include <WiFi.h>
-#include <WebServer.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
 #include <WiFiManager.h>
-WebServer server(80);
+ESP8266WebServer server(80);
 
 #include <FS.h>
 
@@ -41,6 +35,8 @@ RingBuf<int8_t, 240> oilBuffer;
 NTPtime NTPch("ch.pool.ntp.org");
 DateTime now;
 strDateTime dateTime;
+
+#define MAXSCREENS 10
 
 int buttonPin1=2;
 int buttonPin2=0;

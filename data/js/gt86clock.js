@@ -1,3 +1,11 @@
+function updateConfig(params) {
+  var http = new XMLHttpRequest();
+  var url = "/config";
+  http.open("GET", [url,params].join('?'), true);
+  http.send();
+  console.log([url,params].join('?'));
+}
+
 function displayLineChart() {
   var dataDate = JSON.parse(dataDateJson);
   document.getElementById('datetime').innerHTML = dataDate[0].date;

@@ -33,13 +33,11 @@ void setup(void) {
   if(CAN0.begin(MCP_STDEXT, CAN_500KBPS, MCP_8MHZ) == CAN_OK)
   {
     Serial.println("Can1 MCP2515 Initialized Successfully!");
-    delay(500);
+    customDelay(500);
   } else {
     Serial.println("Error Initializing MCP2515...");
-    delay(4000);
+    customDelay(4000);
   }
-
-  xTaskCreatePinnedToCore(updateDisplay, "updateDisplay", 4096, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
 
  // Can Hardware Filter  
   CAN0.init_Mask(0,0,0x07FF0000);                
@@ -57,14 +55,12 @@ void setup(void) {
   WiFiManager wifiManager;
   wifiManager.autoConnect("gt86clock");
 
-  server.begin();
-  
-  server.on("/", handleSpecificArg);   
-  server.on("/date.json", handleDateJson);
-  server.on("/temperature.json", handleTemperatureJson);
-
   SPIFFS.begin();
   
+  server.begin();
+  server.on("/config", handleSpecificArg);   
+  server.on("/date.json", handleDateJs);
+  server.on("/temperature.json", handleTemperatureJson);
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))
       server.send(404, "text/plain", "FileNotFound");

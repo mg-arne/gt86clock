@@ -1,10 +1,10 @@
-void handleDateJson() { //Handler for the body path
+void handleDateJs() { //Handler for the body path
   char temp[75];
   String message;
   sprintf(temp, "dataDateJson = '[{ \"date\": \"%d-%02d-%02d %02d:%02d:%02d\" }]';", now.year(), now.month(), now.day(), now.hour(), now.minute(), now.second() );
   message += temp;
  
-  server.send(200, "application/json", message);
+  server.send(200, "application/javascript", message);
 }
 
 void handleTemperatureJson() { //Handler for the body path
@@ -30,6 +30,10 @@ bool handleFileRead(String path) {
   if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
     if (SPIFFS.exists(pathWithGz))
       path += ".gz";
+    if ( path == "index.html" )
+      server.sendHeader("Cache-Control","no-cache");
+    else
+      server.sendHeader("Cache-Control","max-age=3600");
     File file = SPIFFS.open(path, "r");
     server.streamFile(file, contentType);
     file.close();
@@ -60,26 +64,33 @@ void syncNTP()
   dateTime = NTPch.getNTPtime(1.0, 1);
   if(dateTime.valid){
     NTPch.printDateTime(dateTime);
-    
+
     Clock.setHour(dateTime.hour);
     Clock.setMinute(dateTime.minute);
     Clock.setSecond(dateTime.second);
     Clock.setYear(dateTime.year-2000);
     Clock.setMonth(dateTime.month);
     Clock.setDate(dateTime.day);
+    modeOld = 0;    
   }
 }
 
 boolean setIfBool(String varName) {
-  if ( server.arg(varName) == "false" || server.arg(varName) == "true"  ) {     
+  if ( server.arg(varName) == "true" ) {     
     modeOld = 0; 
-    return server.arg(varName);
+    return true;
+  }
+  if ( server.arg(varName) == "false" ) {     
+    modeOld = 0; 
+    return false;
   }
 }
 
 void handleSpecificArg() { 
-  if ( isDigit(server.arg("mode").charAt(0)) && server.arg("mode").toInt() >= 1 && server.arg("mode").toInt() <= 7 )
-    modeCurrent = server.arg("mode").toInt();                                
+  if (  isDigit(server.arg("mode").charAt(0)) &&  server.arg("mode").toInt() >= 0 && server.arg("mode").toInt() <= MAXSCREENS ) {
+      Serial.println(server.arg("mode").toInt());
+      modeCurrent = server.arg("mode").toInt();     
+  }                   
   
   clock24h           = setIfBool("clock24h");
   pressureBar        = setIfBool("pressureBar");
@@ -91,5 +102,5 @@ void handleSpecificArg() {
     modeOld = 0;    
   }
   
-  handleFileRead("/");
+  server.send(200, "text/plain", "Ok");
 }

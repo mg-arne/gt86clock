@@ -35,7 +35,7 @@ void handleModeButton()
     readyForModeChange = false;
     modeCurrent++;
     // there is only mode 0-6 availble, logo only on start
-    if ( modeCurrent > 6 )
+    if ( modeCurrent > MAXSCREENS-3 )
       modeCurrent = 1;
         
     buttonPin1Pressed=-1; 
@@ -66,7 +66,7 @@ void handleModeButton()
     }
     else if ( modeCurrent == 5 ) //clock
     {
-      clock24h = !clock24h;
+      /*clock24h = !clock24h;
       if ( clock24h && pm )
         clockHour+=12;
       else
@@ -77,7 +77,8 @@ void handleModeButton()
       buttonPin1Pressed=-1; 
       buttonPin2Pressed=-1; 
       EEPROM.put(2, clock24h);
-      EEPROM.commit();
+      EEPROM.commit();*/
+      syncNTP();
     }
     else if ( modeCurrent == 6 ) //afr + volt
     {

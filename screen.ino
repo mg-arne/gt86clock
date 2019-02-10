@@ -63,7 +63,7 @@ void drawOilPressure(bool updateCompleteDisplay)
      drawSingleValue(iconOilCanWidth, iconOilCanHeight, iconOilCanBits, oilPressureChar, 2, "psi", updateCompleteDisplay);
    }
 
-  delay(250);
+  customDelay(250);
 }
 
 void drawLogo(bool updateCompleteDisplay)
@@ -73,9 +73,9 @@ void drawLogo(bool updateCompleteDisplay)
      u8g2.clearDisplay();  
      u8g2.drawXBM( 0, 0, logoWidth, logoHeight, logoBits);
      u8g2.sendBuffer(); 
-     delay(3000);
-     
      modeCurrent=5;
+     modeOld=5;
+     customDelay(3000);
    }
 }
 

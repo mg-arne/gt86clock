@@ -46,6 +46,6 @@ void drawClock(bool updateCompleteDisplay)
   u8g2.drawBox(79-37,20,3,3);
   u8g2.setDrawColor(1);
   u8g2.sendBuffer(); 
-  delay(500);
+  customDelay(500);
   drawDots = !drawDots;
 }

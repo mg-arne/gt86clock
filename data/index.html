@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="js/Chart.min.js"></script>
-    <script type="text/javascript" src="http://192.168.1.46/date.json"></script>
+    <script type="text/javascript" src="date.json"></script>
     <script type="text/javascript" src="js/gt86clock.js"></script>
     <link rel="stylesheet" href="css/gt86clock.css">
   </head>
@@ -22,48 +22,48 @@
     <td>Date/Time</td>
     <td>
        <div id="datetime"></div>
-       <button onclick="window.location.href='/?ntp=true'">sync</button>
+       <button onclick="updateConfig('ntp=true')">sync</button>
       </td>
      </tr>
      <tr>
        <td>Select a screen</td>
        <td>
-         <a href="?mode=0" id="link">0</a>
-         <a href="?mode=1" id="link">1</a>
-         <a href="?mode=2" id="link">2</a>
-         <a href="?mode=3" id="link">3</a>
-         <a href="?mode=4" id="link">4</a>
-         <a href="?mode=5" id="link">5</a>
-         <a href="?mode=6" id="link">6</a>
-         <a href="?mode=7" id="link">7</a>
+         <a onclick="updateConfig('mode=0')" href="#/" id="link">Logo</a><br />
+         <a onclick="updateConfig('mode=1')" href="#/" id="link">Oil Temperature</a><br />
+         <a onclick="updateConfig('mode=2')" href="#/" id="link">Coolant Template</a><br />
+         <a onclick="updateConfig('mode=3')" href="#/" id="link">Coolant+Oil Temperature</a><br />
+         <a onclick="updateConfig('mode=4')" href="#/" id="link">Oil Pressure</a><br />
+         <a onclick="updateConfig('mode=5')" href="#/" id="link">Clock</a><br />
+         <a onclick="updateConfig('mode=6')" href="#/" id="link">AFR and Battery</a><br />
+         <a onclick="updateConfig('mode=7')" href="#/" id="link">Settings</a>
        </td>
     </tr>
     <tr>
        <td>Pressure</td>
        <td>
-         <a href="?oilPressureBar=true" id="link">BAR</a> &#124;
-         <a href="?oilPressureBar=false" id="link">PSI</a>
+         <a onclick="updateConfig('oilPressureBar=true')"  href="#/" id="link">BAR</a> &#124;
+         <a onclick="updateConfig('oilPressureBar=false')" href="#/" id="link">PSI</a>
       </td>
     </tr>
     <tr>
       <td>Temperature</td>
       <td>
-        <a href="?temperatureCelsius=true" id="link">Celsius</a> &#124;
-        <a href="?temperatureCelsius=false" id="link">Fahrenheit</a>
+        <a onclick="updateConfig('temperatureCelsius=true')"  href="#/" id="link">Celsius</a> &#124;
+        <a onclick="updateConfig('temperatureCelsius=false')" href="#/"  id="link">Fahrenheit</a>
       </td>
     </tr>
     <tr>
       <td>Time Format</td>
       <td>
-        <a href="?clock24h=true" id="link">24h</a> &#124;
-        <a href="?clock24h=false" id="link">12h</a>
+        <a onclick="updateConfig('clock24h=true')"  href="#/" id="link">24h</a> &#124;
+        <a onclick="updateConfig('clock24h=false')" href="#/" id="link">12h</a>
       </td>
     </tr>
     <tr>
       <td>Air Fuel Ratio</td>
       <td>
-        <a href="?afrLambda=true" id="link" class="button1">Lambda</a> &#124;
-        <a href="?afrLambda=false" id="link" class="button1">AFR</a>
+        <a onclick="updateConfig('afrLambda=true')"  href="#/" id="link" class="button1">Lambda</a> &#124;
+        <a onclick="updateConfig('afrLambda=false')" href="#/" id="link" class="button1">AFR</a>
       </td>
     </tr>
   </table>
