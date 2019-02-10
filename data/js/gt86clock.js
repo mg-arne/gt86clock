@@ -6,9 +6,27 @@ function updateConfig(params) {
   console.log([url,params].join('?'));
 }
 
+function changeMode() {
+  var http = new XMLHttpRequest();
+  var url = "/config";
+  var params = "mode=";
+  params += document.getElementById("modeCurrent").value; 
+  http.open("GET", [url,params].join('?'), true);
+  http.send();
+  console.log([url,params].join('?'));
+}
+
 function displayLineChart() {
   var dataDate = JSON.parse(dataDateJson);
   document.getElementById('datetime').innerHTML = dataDate[0].date;
+
+  var dataConfig = JSON.parse(dataConfigJson);
+  document.getElementById("modeCurrent").value = dataConfig[0].modeCurrent;
+  document.getElementsByName("pressureBar")[1-dataConfig[0].pressureBar].checked = true;
+  document.getElementsByName("temperatureCelsius")[1-dataConfig[0].temperatureCelsius].checked = true;
+  document.getElementsByName("clock24h")[1-dataConfig[0].clock24h].checked = true;
+  document.getElementsByName("o2afr")[1-dataConfig[0].o2afr].checked = true;
+
 
   Chart.defaults.global.responsive = true;
   Chart.defaults.global.elements.line.fill = false;
@@ -32,14 +50,14 @@ function displayLineChart() {
           label: "Coolant",
           borderColor: "#3e95cd",
           data: [
-            2, 3, 5, 7, 11, 13, 17, 19, 23, 29
+            -10, 25, 50, 66, 77, 83, 88, 93, 97, 98
           ]
         },
         {
           label: "Oil",
           borderColor: "#8e5ea2",
           data: [
-            0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+            -10, 20, 45, 60, 73, 83, 91, 98, 103, 108
           ]
         }
       ]

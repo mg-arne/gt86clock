@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>BRZ/FRS/GT86 custom clock</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="js/Chart.min.js"></script>
-    <script type="text/javascript" src="date.json"></script>
-    <script type="text/javascript" src="js/gt86clock.js"></script>
-    <link rel="stylesheet" href="css/gt86clock.css">
-  </head>
+<head>
+  <title>BRZ/FRS/GT86 custom clock</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="js/Chart.min.js"></script>
+  <script type="text/javascript" src="date.js"></script>
+  <script type="text/javascript" src="config.js"></script>
+  <script type="text/javascript" src="js/gt86clock.js"></script>
+  <link rel="stylesheet" href="css/gt86clock.css">
+</head>
 <body onload="displayLineChart();">
 <h1>BRZ/FRS/GT86 custom clock</h1>
 <canvas id="line-chart" height="300"></canvas>
@@ -21,54 +22,65 @@
   <tr>
     <td>Date/Time</td>
     <td>
-       <div id="datetime"></div>
-       <button onclick="updateConfig('ntp=true')">sync</button>
-      </td>
-     </tr>
-     <tr>
-       <td>Select a screen</td>
-       <td>
-         <a onclick="updateConfig('mode=0')" href="#/" id="link">Logo</a><br />
-         <a onclick="updateConfig('mode=1')" href="#/" id="link">Oil Temperature</a><br />
-         <a onclick="updateConfig('mode=2')" href="#/" id="link">Coolant Template</a><br />
-         <a onclick="updateConfig('mode=3')" href="#/" id="link">Coolant+Oil Temperature</a><br />
-         <a onclick="updateConfig('mode=4')" href="#/" id="link">Oil Pressure</a><br />
-         <a onclick="updateConfig('mode=5')" href="#/" id="link">Clock</a><br />
-         <a onclick="updateConfig('mode=6')" href="#/" id="link">AFR and Battery</a><br />
-         <a onclick="updateConfig('mode=7')" href="#/" id="link">Settings</a>
-       </td>
-    </tr>
-    <tr>
-       <td>Pressure</td>
-       <td>
-         <a onclick="updateConfig('oilPressureBar=true')"  href="#/" id="link">BAR</a> &#124;
-         <a onclick="updateConfig('oilPressureBar=false')" href="#/" id="link">PSI</a>
-      </td>
-    </tr>
-    <tr>
-      <td>Temperature</td>
-      <td>
-        <a onclick="updateConfig('temperatureCelsius=true')"  href="#/" id="link">Celsius</a> &#124;
-        <a onclick="updateConfig('temperatureCelsius=false')" href="#/"  id="link">Fahrenheit</a>
-      </td>
-    </tr>
-    <tr>
-      <td>Time Format</td>
-      <td>
-        <a onclick="updateConfig('clock24h=true')"  href="#/" id="link">24h</a> &#124;
-        <a onclick="updateConfig('clock24h=false')" href="#/" id="link">12h</a>
-      </td>
-    </tr>
-    <tr>
-      <td>Air Fuel Ratio</td>
-      <td>
-        <a onclick="updateConfig('afrLambda=true')"  href="#/" id="link" class="button1">Lambda</a> &#124;
-        <a onclick="updateConfig('afrLambda=false')" href="#/" id="link" class="button1">AFR</a>
-      </td>
-    </tr>
-  </table>
-  <p id="github">
-    <a href="https://github.com/mg-arne/gt86clock" target="_blank">Visit the project on Github</a>
-  </p>
-  </body>
+      <div id="datetime"></div>
+      <button onclick="updateConfig('ntp=true')">sync</button>
+    </td>
+  </tr>
+  <tr>
+    <td>Mode
+    </td>
+    <td>
+      <select id="modeCurrent" onchange="changeMode()">
+        <option value="0">Logo</option>
+        <option value="1">Oil Temperature</option>
+        <option value="2">Coolant Temperature</option>
+        <option value="3">Coolant+Oil Temperature</option>
+        <option value="4">Oil Pressure</option>
+        <option value="5">Clock</option>
+        <option value="6">AFR and Battery</option>
+        <option value="7">Settings</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Pressure</td>
+    <td>
+      <div>
+        <input type="radio" name="pressureBar" value="1" onchange="updateConfig('pressureBar=1')"/><label for="pressureBar">BAR</label>
+        <input type="radio" name="pressureBar" value="0" onchange="updateConfig('pressureBar=0')"/><label for="pressureBar">PSI</label>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>Temperature</td>
+    <td>
+      <div>
+        <input type="radio" name="temperatureCelsius" value="1" onchange="updateConfig('temperatureCelsius=1')"/><label for="temperatureCelsius">Celsius</label>
+        <input type="radio" name="temperatureCelsius" value="0" onchange="updateConfig('temperatureCelsius=0')"/><label for="temperatureCelsius">Fahrenheit</label>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>Time Format</td>
+    <td>
+      <div>
+        <input type="radio" name="clock24h" value="1" onchange="updateConfig('clock24h=1')"/><label for="clock24h">24h</label>
+        <input type="radio" name="clock24h" value="0" onchange="updateConfig('clock24h=0')"/><label for="clock24h">12h</label>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>Air Fuel Ratio</td>
+    <td>
+      <div>
+        <input type="radio" name="o2afr" value="1" onchange="updateConfig('o2afr=1')"/><label for="o2afr">AFR</label>
+        <input type="radio" name="o2afr" value="0" onchange="updateConfig('o2afr=0')"/><label for="o2afr">Lambda</label>
+      </div>
+    </td>
+  </tr>
+</table>
+<p id="github">
+  <a href="https://github.com/mg-arne/gt86clock" target="_blank">Visit the project on Github</a>
+</p>
+</body>
 </html>

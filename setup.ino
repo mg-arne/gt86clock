@@ -59,8 +59,9 @@ void setup(void) {
   
   server.begin();
   server.on("/config", handleSpecificArg);   
-  server.on("/date.json", handleDateJs);
-  server.on("/temperature.json", handleTemperatureJson);
+  server.on("/date.js", handleDateJs);
+  server.on("/config.js", handleConfigJs);
+  server.on("/temperature.js", handleTemperatureJson);
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))
       server.send(404, "text/plain", "FileNotFound");

@@ -1,4 +1,4 @@
-void handleDateJs() { //Handler for the body path
+void handleDateJs() {
   char temp[75];
   String message;
   sprintf(temp, "dataDateJson = '[{ \"date\": \"%d-%02d-%02d %02d:%02d:%02d\" }]';", now.year(), now.month(), now.day(), now.hour(), now.minute(), now.second() );
@@ -7,7 +7,7 @@ void handleDateJs() { //Handler for the body path
   server.send(200, "application/javascript", message);
 }
 
-void handleTemperatureJson() { //Handler for the body path
+void handleTemperatureJson() { 
   char temp[75];
   String message;
  
@@ -76,14 +76,23 @@ void syncNTP()
 }
 
 boolean setIfBool(String varName) {
-  if ( server.arg(varName) == "true" ) {     
+  if ( server.arg(varName) == "1" ) {     
     modeOld = 0; 
     return true;
   }
-  if ( server.arg(varName) == "false" ) {     
+  if ( server.arg(varName) == "0" ) {     
     modeOld = 0; 
     return false;
   }
+}
+
+void handleConfigJs() {
+  char temp[200];
+  String message;
+  sprintf(temp, "dataConfigJson = '[{ \"modeCurrent\": \"%d\", \"clock24h\": \"%d\", \"pressureBar\": \"%d\", \"temperatureCelsius\": \"%d\", \"o2afr\": \"%d\"  }]';", modeCurrent, clock24h, pressureBar, temperatureCelsius, o2afr );
+  message += temp;
+ 
+  server.send(200, "application/javascript", message);
 }
 
 void handleSpecificArg() { 
@@ -92,15 +101,19 @@ void handleSpecificArg() {
       modeCurrent = server.arg("mode").toInt();     
   }                   
   
-  clock24h           = setIfBool("clock24h");
-  pressureBar        = setIfBool("pressureBar");
-  temperatureCelsius = setIfBool("temperatureCelsius");
-  o2afr              = setIfBool("o2afr");
+  if (server.arg("clock24h"))
+    clock24h = setIfBool("clock24h");
+  if (server.arg("pressureBar"))
+    pressureBar = setIfBool("pressureBar");
+  if (server.arg("temperatureCelsius"))
+    temperatureCelsius = setIfBool("temperatureCelsius");
+  if (server.arg("o2afr"))
+    o2afr = setIfBool("o2afr");
 
   if ( server.arg("ntp") == "true" ) {     
     syncNTP();
     modeOld = 0;    
   }
-  
+ 
   server.send(200, "text/plain", "Ok");
-}
+ }
