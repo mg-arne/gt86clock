@@ -7,8 +7,8 @@ void drawAfrAndVoltage(bool updateCompleteDisplay)
     char voltageChar[4];
     
     dtostrf(voltage,1,1,voltageChar);
-    drawTwoValues(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, afrChar, countDigit(coolantTemp) , "", 
-                  iconOilCanWidth , iconOilCanHeight , iconOilCanBits , voltageChar, 4, "V", updateCompleteDisplay);
+    drawTwoValues(o2Width     , o2Height     , o2Bits     , afrChar    , countDigits(afr), "" , 
+                  batteryWidth, batteryHeight, batteryBits, voltageChar, 4               , "V", updateCompleteDisplay);
   }
   else
   {
@@ -17,35 +17,35 @@ void drawAfrAndVoltage(bool updateCompleteDisplay)
     char voltageChar[4];
     dtostrf(voltage,1,1,voltageChar);
     
-    drawTwoValues(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, afrChar, countDigit(coolantTemp*1.8+32) , "", 
-                  iconOilCanWidth , iconOilCanHeight , iconOilCanBits , voltageChar, 4, "V", updateCompleteDisplay);
+    drawTwoValues(o2Width     , o2Height     , o2Bits     , afrChar    , countDigits(afr*1.8+32), "" , 
+                  batteryWidth, batteryHeight, batteryBits, voltageChar, 4                      , "V", updateCompleteDisplay);
   }
 }
 
 void drawCoolantOilTemp(bool updateCompleteDisplay)
 { 
   if ( temperatureCelsius )
-    drawTwoValues(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(coolantTemp).c_str(), countDigit(coolantTemp) , "C", 
-                  iconOilCanWidth , iconOilCanHeight , iconOilCanBits , (char*)String(oilTemp).c_str()    , countDigit(oilTemp)     , "C", updateCompleteDisplay);
+    drawTwoValues(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(coolantTemp).c_str(), countDigits(coolantTemp) , "C", 
+                  iconOilCanWidth , iconOilCanHeight , iconOilCanBits , (char*)String(oilTemp).c_str()    , countDigits(oilTemp)     , "C", updateCompleteDisplay);
   else
-    drawTwoValues(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(coolantTemp*1.8+32).c_str(), countDigit(coolantTemp*1.8+32) , "F", 
-                  iconOilCanWidth , iconOilCanHeight , iconOilCanBits , (char*)String(oilTemp*1.8+32).c_str()    , countDigit(oilTemp*1.8+32)     , "F", updateCompleteDisplay);
+    drawTwoValues(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(coolantTemp*1.8+32).c_str(), countDigits(coolantTemp*1.8+32) , "F", 
+                  iconOilCanWidth , iconOilCanHeight , iconOilCanBits , (char*)String(oilTemp*1.8+32).c_str()    , countDigits(oilTemp*1.8+32)     , "F", updateCompleteDisplay);
 }
 
 void drawCoolantTemp(bool updateCompleteDisplay)
 { 
    if ( temperatureCelsius )
-     drawSingleValue(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(coolantTemp).c_str()   , countDigit(coolantTemp)       , "C", updateCompleteDisplay);
+     drawSingleValue(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(coolantTemp).c_str()   , countDigits(coolantTemp)       , "C", updateCompleteDisplay);
    else
-     drawSingleValue(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(oilTemp*1.8+32).c_str(), countDigit(coolantTemp*1.8+32), "F", updateCompleteDisplay);
+     drawSingleValue(iconCoolantWidth, iconCoolantHeight, iconCoolantBits, (char*)String(oilTemp*1.8+32).c_str(), countDigits(coolantTemp*1.8+32), "F", updateCompleteDisplay);
 }
 
 void drawOilTemp(bool updateCompleteDisplay)
 { 
    if ( temperatureCelsius )
-     drawSingleValue(iconOilCanWidth, iconOilCanHeight, iconOilCanBits, (char*)String(oilTemp).c_str()       , countDigit(oilTemp)       , "C", updateCompleteDisplay);
+     drawSingleValue(iconOilCanWidth, iconOilCanHeight, iconOilCanBits, (char*)String(oilTemp).c_str()       , countDigits(oilTemp)       , "C", updateCompleteDisplay);
    else
-     drawSingleValue(iconOilCanWidth, iconOilCanHeight, iconOilCanBits, (char*)String(oilTemp*1.8+32).c_str(), countDigit(oilTemp*1.8+32), "F", updateCompleteDisplay);
+     drawSingleValue(iconOilCanWidth, iconOilCanHeight, iconOilCanBits, (char*)String(oilTemp*1.8+32).c_str(), countDigits(oilTemp*1.8+32), "F", updateCompleteDisplay);
 }
 
 void drawOilPressure(bool updateCompleteDisplay)
@@ -69,7 +69,7 @@ void drawOilPressure(bool updateCompleteDisplay)
 void drawLogo(bool updateCompleteDisplay)
 {   
    if ( updateCompleteDisplay == true )
-   {  
+   {
      u8g2.clearDisplay();  
      u8g2.drawXBM( 0, 0, logoWidth, logoHeight, logoBits);
      u8g2.sendBuffer(); 
@@ -79,7 +79,7 @@ void drawLogo(bool updateCompleteDisplay)
    }
 }
 
-int countDigit(int n) 
+int countDigits(int n) 
 { 
   if ( n < 0 )
     return floor(log10(abs(n))+2);
@@ -137,8 +137,10 @@ void drawTwoValues(int iconUpWidth, int iconUpHeight, unsigned char iconUpBits[]
       u8g2.drawStr(116,16,unitUp);
       u8g2.drawStr(116,32,unitDown);
     }
-    else if ( unitDown == "V" )
+    else if ( unitDown == "V" ) {
+      u8g2.setFont(u8g2_font_crox3cb_mf);
       u8g2.drawStr(116,32,unitDown);
+    }
   }
 
   u8g2.setDrawColor(0);

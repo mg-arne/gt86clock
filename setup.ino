@@ -16,19 +16,7 @@ void setup(void) {
   attachInterrupt(digitalPinToInterrupt(buttonPin2), handleInterruptPin2, CHANGE); 
  
   EEPROM.begin(512);
-  byte tmp;
-  int addr=0;
-  EEPROM.get(addr,tmp);
-  temperatureCelsius = bitRead(tmp,0);
-  addr++;
-  EEPROM.get(addr,tmp);
-  pressureBar = bitRead(tmp,0);
-  addr++;
-  EEPROM.get(addr,tmp);
-  clock24h = bitRead(tmp,0);
-  addr++;
-  EEPROM.get(addr,tmp);
-  o2afr = bitRead(tmp,0);
+  readConfig();
 
   if(CAN0.begin(MCP_STDEXT, CAN_500KBPS, MCP_8MHZ) == CAN_OK)
   {
@@ -66,4 +54,28 @@ void setup(void) {
     if (!handleFileRead(server.uri()))
       server.send(404, "text/plain", "FileNotFound");
   });
+}
+
+void readConfig(){
+  byte tmp;
+  int addr=0;
+  EEPROM.get(addr,tmp);
+  temperatureCelsius = bitRead(tmp,0);
+  addr++;
+  EEPROM.get(addr,tmp);
+  pressureBar = bitRead(tmp,0);
+  addr++;
+  EEPROM.get(addr,tmp);
+  clock24h = bitRead(tmp,0);
+  addr++;
+  EEPROM.get(addr,tmp);
+  o2afr = bitRead(tmp,0);
+}
+
+void writeConfig(){
+  EEPROM.put(0, temperatureCelsius);
+  EEPROM.put(1, pressureBar);
+  EEPROM.put(2, clock24h);
+  EEPROM.put(3, o2afr);
+  EEPROM.commit();  
 }

@@ -52,8 +52,7 @@ void handleModeButton()
       modeOld = 0; // force refresh
       buttonPin1Pressed=-1; 
       buttonPin2Pressed=-1; 
-      EEPROM.put(0, temperatureCelsius);
-      EEPROM.commit();
+      writeConfig();
     }
     else if ( modeCurrent == 4 ) //oil pressure
     {
@@ -61,23 +60,10 @@ void handleModeButton()
       modeOld = 0; // force refresh
       buttonPin1Pressed=-1; 
       buttonPin2Pressed=-1; 
-      EEPROM.put(1, pressureBar);
-      EEPROM.commit();
+      writeConfig();
     }
     else if ( modeCurrent == 5 ) //clock
     {
-      /*clock24h = !clock24h;
-      if ( clock24h && pm )
-        clockHour+=12;
-      else
-        clockHour-=12;
-        
-      Clock.setHour(clockHour);
-      clockRefresh = true;
-      buttonPin1Pressed=-1; 
-      buttonPin2Pressed=-1; 
-      EEPROM.put(2, clock24h);
-      EEPROM.commit();*/
       syncNTP();
     }
     else if ( modeCurrent == 6 ) //afr + volt
@@ -86,8 +72,7 @@ void handleModeButton()
       modeOld = 0; // force refresh
       buttonPin1Pressed=-1; 
       buttonPin2Pressed=-1; 
-      EEPROM.put(3, o2afr);
-      EEPROM.commit();
+      writeConfig();
     }
   }
 }

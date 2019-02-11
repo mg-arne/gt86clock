@@ -77,11 +77,11 @@ void syncNTP()
 
 boolean setIfBool(String varName) {
   if ( server.arg(varName) == "1" ) {     
-    modeOld = 0; 
+    modeOld = 0;
     return true;
   }
   if ( server.arg(varName) == "0" ) {     
-    modeOld = 0; 
+    modeOld = 0;
     return false;
   }
 }
@@ -109,11 +109,12 @@ void handleSpecificArg() {
     temperatureCelsius = setIfBool("temperatureCelsius");
   if (server.arg("o2afr"))
     o2afr = setIfBool("o2afr");
-
+  
   if ( server.arg("ntp") == "true" ) {     
     syncNTP();
     modeOld = 0;    
   }
- 
+  
+  writeConfig(); 
   server.send(200, "text/plain", "Ok");
  }

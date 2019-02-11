@@ -20,18 +20,17 @@ void loop(void) {
         oilBuffer.push(oilTemp);
         coolantBuffer.push(coolantTemp);
           
-     /*   if ( ! temperatureCelsius )
+        if ( ! temperatureCelsius )
         {
           oilTemp=round(oilTemp*1.8+32);
-        //  coolantTemp=round(coolantTemp*1.8+32);
-        }*/
+          coolantTemp=round(coolantTemp*1.8+32);
+        }
 
         lastTempUpdate=millis();
       }   
 
       if ( coolantTemp < -39 || coolantTemp > 320 )
         coolantTemp=999;
-      coolantTemp=random(180)-40;
     }
   }
   else if ( modeCurrent == 4 )
