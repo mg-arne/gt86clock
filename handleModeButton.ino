@@ -3,7 +3,7 @@ void handleModeButton()
   // hour button pressed
   if ( digitalRead(buttonPin1) == HIGH && millis()-buttonPin1Pressed < 250 && abs ( buttonPin1Pressed - buttonPin2Pressed ) > 200 )
   {
-    if ( modeCurrent == 5 && clockRefresh == false )
+    if ( modeCurrent == CLOCK && clockRefresh == false )
     { 
      // buttonHourPressed=0;
       clockHour++;
@@ -17,7 +17,7 @@ void handleModeButton()
   // minute button pressed
   if ( digitalRead(buttonPin2) == HIGH && millis()-buttonPin2Pressed < 250 && abs ( buttonPin1Pressed - buttonPin2Pressed ) > 200 )
   {
-    if ( modeCurrent == 5 && clockRefresh == false )
+    if ( modeCurrent == CLOCK && clockRefresh == false )
     { 
      // buttonMinutePressed=0;
       clockMinute++;
@@ -46,7 +46,7 @@ void handleModeButton()
   // mode button, long press
   if ( buttonPin1Pressed != -1 && buttonPin2Pressed != -1 && digitalRead(buttonPin1) == LOW && digitalRead(buttonPin2) == LOW && abs ( buttonPin1Pressed - buttonPin2Pressed ) < 200 && millis() - buttonPin2Pressed > 1000 && millis() - buttonPin2Pressed < 5000 )
   {
-    if ( modeCurrent == 1 || modeCurrent == 2 || modeCurrent == 3  ) //oil+coolant temp
+    if ( modeCurrent == OILTEMP || modeCurrent == COOLANTTEMP || modeCurrent == OILCOOLANTTEMP  ) //oil+coolant temp
     {
       temperatureCelsius = !temperatureCelsius;
       modeOld = 0; // force refresh
@@ -54,7 +54,7 @@ void handleModeButton()
       buttonPin2Pressed=-1; 
       writeConfig();
     }
-    else if ( modeCurrent == 4 ) //oil pressure
+    else if ( modeCurrent == OILPRESSURE ) //oil pressure
     {
       pressureBar = !pressureBar;
       modeOld = 0; // force refresh
@@ -62,11 +62,11 @@ void handleModeButton()
       buttonPin2Pressed=-1; 
       writeConfig();
     }
-    else if ( modeCurrent == 5 ) //clock
+    else if ( modeCurrent == CLOCK ) //clock
     {
       syncNTP();
     }
-    else if ( modeCurrent == 6 ) //afr + volt
+    else if ( modeCurrent == O2 ) //afr + volt
     {
       o2afr = !o2afr;
       modeOld = 0; // force refresh

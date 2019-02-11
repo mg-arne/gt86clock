@@ -37,6 +37,15 @@ DateTime now;
 strDateTime dateTime;
 
 #define MAXSCREENS 10
+#define LOGO 0
+#define CLOCK 1
+#define OILTEMP 2
+#define COOLANTTEMP 3
+#define OILCOOLANTTEMP 4
+#define OILPRESSURE 5
+#define O2 6
+#define SETTINGS 7
+
 
 int buttonPin1=2;
 int buttonPin2=0;

@@ -73,8 +73,8 @@ void drawLogo(bool updateCompleteDisplay)
      u8g2.clearDisplay();  
      u8g2.drawXBM( 0, 0, logoWidth, logoHeight, logoBits);
      u8g2.sendBuffer(); 
-     modeCurrent=5;
-     modeOld=5;
+     modeCurrent=CLOCK;
+     modeOld=CLOCK;
      customDelay(3000);
    }
 }

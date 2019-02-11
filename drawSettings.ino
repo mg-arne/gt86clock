@@ -59,7 +59,7 @@ void drawSettingsO2(bool updateCompleteDisplay)
     u8g2.drawStr(1,16,"O2: Lambda");
       
   u8g2.sendBuffer(); 
-  modeCurrent=7;
+  modeCurrent=SETTINGS;
   modeOld=modeCurrent;
   customDelay(2000);
 }

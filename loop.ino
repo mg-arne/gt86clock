@@ -6,7 +6,7 @@ void loop(void) {
   server.handleClient(); //Handling of incoming requests
   
   // update oil temp test values
-  if ( modeCurrent == 1 ||  modeCurrent == 2 || modeCurrent == 3 )
+  if ( modeCurrent == OILTEMP ||  modeCurrent == COOLANTTEMP || modeCurrent == OILCOOLANTTEMP )
   {
     if(CAN_MSGAVAIL == CAN0.checkReceive())            
     {
@@ -33,7 +33,7 @@ void loop(void) {
         coolantTemp=999;
     }
   }
-  else if ( modeCurrent == 4 )
+  else if ( modeCurrent == OILPRESSURE )
   {
     oilPressureOld=analogRead(A0);
     if ( oilPressureOld < oilPressureOffset ) { oilPressureOld = oilPressureOffset; }
@@ -53,7 +53,7 @@ void loop(void) {
       if ( oilPressure > 150 ) { oilPressure=150; }
     }  
   }
-  else if ( modeCurrent == 5 && ( clockHour != now.hour() || clockMinute != now.minute() ) )
+  else if ( modeCurrent == CLOCK && ( clockHour != now.hour() || clockMinute != now.minute() ) )
   {
     clockHour = now.hour();
     clockMinute = now.minute();
@@ -69,7 +69,7 @@ void loop(void) {
     }
     clockRefresh = true; 
   }
-  else if ( modeCurrent == 6 )
+  else if ( modeCurrent == O2 )
   {
     if(CAN_MSGAVAIL == CAN0.checkReceive())            
     {
@@ -125,28 +125,28 @@ void loop(void) {
 
     // refresh display
     switch (modeCurrent) {
-    case 0:
+    case LOGO:
       drawLogo(updateCompleteDisplay);
       break;
-    case 1:
-      drawOilTemp(updateCompleteDisplay);
-      break;
-    case 2:
-      drawCoolantTemp(updateCompleteDisplay);
-      break;
-    case 3:
-      drawCoolantOilTemp(updateCompleteDisplay);
-      break;
-    case 4:
-      drawOilPressure(updateCompleteDisplay);
-      break;
-    case 5:
+    case CLOCK:
       drawClock(updateCompleteDisplay);
       break;
-    case 6:
+    case OILTEMP:
+      drawOilTemp(updateCompleteDisplay);
+      break;
+    case COOLANTTEMP:
+       drawCoolantTemp(updateCompleteDisplay);
+      break;
+    case OILCOOLANTTEMP:
+      drawCoolantOilTemp(updateCompleteDisplay);
+      break;
+    case OILPRESSURE:
+      drawOilPressure(updateCompleteDisplay);
+      break;
+    case O2:
       drawAfrAndVoltage(updateCompleteDisplay);
       break;
-    case 7:
+    case SETTINGS:
       drawSettingsWifi(updateCompleteDisplay);
       break;
     case 8:
