@@ -7,7 +7,7 @@ void handleDateJs() {
   server.send(200, "application/javascript", message);
 }
 
-void handleTemperatureJson() { 
+void handleTemperatureJs() { 
   char temp[75];
   String message;
  
@@ -18,6 +18,20 @@ void handleTemperatureJson() {
  //message += temp;
  
  server.send(200, "application/json", message);
+}
+
+bool handleJson() {
+  char temp[75];
+  String message;
+  message += "dataJson = '[";
+  Dir dir = SPIFFS.openDir("/json");
+  while (dir.next()) {
+    message += "{ \"file\": \""+dir.fileName()+"\", \"size\": \""+dir.fileSize()+"\" },";
+  }
+  message.remove(message.length() - 1);
+  message += "]';";
+
+  server.send(200, "text/plain", message);
 }
 
 bool handleFileRead(String path) {

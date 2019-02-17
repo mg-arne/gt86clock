@@ -27,10 +27,6 @@ ESP8266WebServer server(80);
 
 #include <FS.h>
 
-#include <RingBuf.h>
-RingBuf<int8_t, 240> coolantBuffer;
-RingBuf<int8_t, 240> oilBuffer;
-
 #include <NTPtimeESP.h>
 NTPtime NTPch("ch.pool.ntp.org");
 DateTime now;
@@ -59,6 +55,7 @@ int modeOld=-1;
 int oilTemp;
 int lastModeChange=0;
 int lastTempUpdate=0;
+int lastJsonAppend=0;
 
 long unsigned int rxId;
 
@@ -78,6 +75,8 @@ float oilPressure;
 float oilPressureOld;
 float oilPressureOffset=114;
 float oilPressureScalingFactor=0.172018348623853; 
+
+String jsonFile;
 
 unsigned char len = 0;
 unsigned char buf[12];

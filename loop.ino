@@ -16,10 +16,7 @@ void loop(void) {
       {
         oilTemp     = buf[2]-40; 
         coolantTemp = buf[3]-40;              
-     
-        oilBuffer.push(oilTemp);
-        coolantBuffer.push(coolantTemp);
-          
+               
         if ( ! temperatureCelsius )
         {
           oilTemp=round(oilTemp*1.8+32);
@@ -161,6 +158,11 @@ void loop(void) {
       
     default:
       drawLogo(updateCompleteDisplay);
+    }
+
+    if ( millis() - lastJsonAppend > 10000 ) {
+      appendJsonFile(jsonFile);
+      lastJsonAppend =  millis();  
     }
 
     readyForModeChange = true;

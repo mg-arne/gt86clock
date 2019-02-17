@@ -40,22 +40,71 @@ void setup(void) {
 
   CAN0.setMode(MCP_NORMAL);
 
+  wifi_station_set_hostname("gt86clock");
+
   WiFiManager wifiManager;
   wifiManager.autoConnect("gt86clock");
+  WiFi.hostname("gt86clock");
 
   SPIFFS.begin();
   
   server.begin();
   server.on("/config", handleSpecificArg);   
+  server.on("/json.js", handleJson);   
   server.on("/date.js", handleDateJs);
   server.on("/config.js", handleConfigJs);
-  server.on("/temperature.js", handleTemperatureJson);
+  server.on("/temperature.js", handleTemperatureJs);
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))
       server.send(404, "text/plain", "FileNotFound");
   });
+
+  now = RTC.now();
+  char temp[75];
+  sprintf(temp, "/json/gt86clock_%04d%02d%02d%02d%02d.js", now.year(),now.month(),now.day(),now.hour(),now.minute());
+  jsonFile += temp;
+  createJsonFile(jsonFile);
 }
 
+bool createJsonFile(String jsonFile) {
+  File file = SPIFFS.open(jsonFile, "w");
+  
+  if(!file){
+    Serial.println("There was an error creating a new json file");
+    return false;
+  }
+ 
+  if(!file.println("{\"Time\":[\"Oil Temperature\",\"Coolant Temperature\",\"Oil Pressure\",\"O2\",\"Voltage\"]}")) {
+    Serial.println("File append failed");
+    return false;
+  }
+    
+  file.close();
+  return true;
+}
+
+bool appendJsonFile(String jsonFile) { 
+  File file = SPIFFS.open(jsonFile, "a");
+
+  if(!file){
+    Serial.println("There was an error opening the file for appending");
+    return false;
+  }
+
+  char temp[75];
+  String message;
+  sprintf(temp, ",{\"%d\":[\"%d\",\"%d\",\"%d\",\"%d\",\"%d\"]}", millis(),oilTemp,coolantTemp,oilPressure,o2afr,voltage);
+  message += temp;
+ 
+  if(!file.println(message)) {
+    Serial.println("File append failed");
+    return false;
+  }
+  
+  file.close();
+  return true;
+}
+  
 void readConfig(){
   byte tmp;
   int addr=0;
