@@ -7,7 +7,7 @@ void drawAfrAndVoltage(bool updateCompleteDisplay)
     char voltageChar[4];
     
     dtostrf(voltage,1,1,voltageChar);
-    drawTwoValues(o2Width     , o2Height     , o2Bits     , afrChar    , countDigits(afr), "" , 
+    drawTwoValues(o2Width     , o2Height     , o2Bits     , afrChar    , countDigits(float(round((afr/14.7)*100))/100), "" , 
                   batteryWidth, batteryHeight, batteryBits, voltageChar, 4               , "V", updateCompleteDisplay);
   }
   else
@@ -17,8 +17,8 @@ void drawAfrAndVoltage(bool updateCompleteDisplay)
     char voltageChar[4];
     dtostrf(voltage,1,1,voltageChar);
     
-    drawTwoValues(o2Width     , o2Height     , o2Bits     , afrChar    , countDigits(afr*1.8+32), "" , 
-                  batteryWidth, batteryHeight, batteryBits, voltageChar, 4                      , "V", updateCompleteDisplay);
+    drawTwoValues(o2Width     , o2Height     , o2Bits     , afrChar    , countDigits(afr), "" , 
+                  batteryWidth, batteryHeight, batteryBits, voltageChar, 4               , "V", updateCompleteDisplay);
   }
 }
 
@@ -73,9 +73,11 @@ void drawLogo(bool updateCompleteDisplay)
      u8g2.clearDisplay();  
      u8g2.drawXBM( 0, 0, logoWidth, logoHeight, logoBits);
      u8g2.sendBuffer(); 
+     wifiManager.autoConnect("gt86clock");
+     WiFi.hostname("gt86clock");
      modeCurrent=CLOCK;
      modeOld=CLOCK;
-     customDelay(3000);
+     customDelay(1000);
    }
 }
 

@@ -42,9 +42,7 @@ void setup(void) {
 
   wifi_station_set_hostname("gt86clock");
 
-  WiFiManager wifiManager;
-  wifiManager.autoConnect("gt86clock");
-  WiFi.hostname("gt86clock");
+  wifiManager.setConfigPortalBlocking(false);
 
   SPIFFS.begin();
   
@@ -93,7 +91,7 @@ bool appendJsonFile(String jsonFile) {
 
   char temp[75];
   String message;
-  sprintf(temp, ",{\"%d\":[\"%d\",\"%d\",\"%d\",\"%d\",\"%d\"]}", millis(),oilTemp,coolantTemp,oilPressure,o2afr,voltage);
+  sprintf(temp, ",{\"%d\":[\"%d\",\"%d\",\"%.2f\",\"%.2f\",\"%.1f\"]}", millis(),oilTemp,coolantTemp,oilPressure,afr,voltage);
   message += temp;
  
   if(!file.println(message)) {

@@ -25,6 +25,13 @@ function addZero(i) {
   return i;
 }
 
+function removeData() {
+    chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+}
+
 function changeJson() {
   var http = new XMLHttpRequest();
   var url = document.getElementById("json").value;
@@ -35,6 +42,7 @@ function changeJson() {
     if (this.readyState == 4 && this.status == 200) {
       var dataGraph = JSON.parse("{\"data\": ["+http.responseText+"]}");
       var i=0;
+      removeData();
       for (var line in dataGraph['data']) {
         for (var value in dataGraph['data'][line]) {
           if ( i > 0 ) {

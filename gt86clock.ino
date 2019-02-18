@@ -25,6 +25,8 @@ DS3231 Clock;
 #include <WiFiManager.h>
 ESP8266WebServer server(80);
 
+WiFiManager wifiManager;
+
 #include <FS.h>
 
 #include <NTPtimeESP.h>
@@ -49,10 +51,10 @@ int buttonPin1Pressed=-1;     // whether the button input 1 is pressed
 int buttonPin2Pressed=-1;     // whether the button input 2 is pressed
 int clockHour=8;
 int clockMinute=30;
-int coolantTemp;
+int coolantTemp=0;
 int modeCurrent=0;
 int modeOld=-1;
-int oilTemp;
+int oilTemp=0;
 int lastModeChange=0;
 int lastTempUpdate=0;
 int lastJsonAppend=0;
