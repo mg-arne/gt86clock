@@ -6,25 +6,39 @@ void loop(void) {
   server.handleClient(); //Handling of incoming requests
   wifiManager.process();
   
-  // update oil temp test values
+  // update oil temp values
   if(CAN_MSGAVAIL == CAN0.checkReceive())            
   {
     CAN0.readMsgBuf(&rxId, &len, buf);        
-
+    //Serial.println(rxId, HEX);
     if ( rxId == 0x360 )
     {
-      oilTemp     = buf[2]-40; 
-      coolantTemp = buf[3]-40;              
-               
-      if ( ! temperatureCelsius )
+      if (buf[2] > 0 && buf[2] < 200)
       {
-        oilTemp=round(oilTemp*1.8+32);
-        coolantTemp=round(coolantTemp*1.8+32);
+        oilTemp     = buf[2]-40;
+        if ( ! temperatureCelsius ) oilTemp=round(oilTemp*1.8+32);
+        lastTempUpdate=millis();
       }
-
-      lastTempUpdate=millis();
-    }  else if ( rxId = 0x134 )
+      if (buf[3] > 0 && buf[3] < 200)
+      {
+         coolantTemp = buf[3]-40; 
+         if ( ! temperatureCelsius ) coolantTemp=round(coolantTemp*1.8+32);
+         lastTempUpdate=millis();             
+      }
+    }  else if ( rxId == 0x134 )
     {
+      Serial.print("ID: ");
+      Serial.print(rxId, HEX);
+      Serial.print("  Data: ");
+      for(int i = 0; i<len; i++)                // Print each byte of the data
+      {
+        if(buf[i] < 0x10)                     // If data byte is less than 0x10, add a leading zero
+        {
+          Serial.print("0");
+        }
+        Serial.print(buf[i], HEX);
+        Serial.print(" ");
+      }
       // value = ((strtol(&buf[6],0,16)*256)+strtol(&buf[9],0,16))/32768*14.7;  //(A*256+B)/32768*14.7
 
       //afr = buf[0];   
@@ -40,14 +54,31 @@ void loop(void) {
         afr=-1;
       }     
     }
-    else if ( rxId = 0x142 )
+    else if ( rxId == 0x142 )
     {
-      voltage = (buf[3]*256+buf[4])/1000; //aka ((A*256)+B)/1000 ;      
+      Serial.print("ID: ");
+      Serial.print(rxId, HEX);
+      Serial.print("  Data: ");
+      for(int i = 0; i<len; i++)                // Print each byte of the data
+      {
+        if(buf[i] < 0x10)                     // If data byte is less than 0x10, add a leading zero
+        {
+          Serial.print("0");
+        }
+        Serial.print(buf[i], HEX);
+        Serial.print(" ");
+      }
+      Serial.println();
+      Serial.print("buf[3]: ");
+      Serial.print(buf[3]);
+      Serial.print(" buf[4]: ");
+      Serial.println(buf[4]);
+      voltage = (buf[3]*256+buf[4])/1000; //aka ((A*256)+B)/1000 ;
+      Serial.print("Voltage: ");
+      Serial.println(voltage);           
       voltage = float(round(voltage*10))/10;
-      if ( voltage < 5 || voltage > 16 ) voltage=-1; 
+      if ( voltage < 5 || voltage > 16 ) voltage=0;
     } 
-    
-    if ( coolantTemp < -39 || coolantTemp > 320 ) { coolantTemp=0; }
   }
 
   oilPressureOld=analogRead(A0);
@@ -126,16 +157,16 @@ void loop(void) {
     case O2:
       drawAfrAndVoltage(updateCompleteDisplay);
       break;
-    case SETTINGS:
+    case SETTINGSWIFI:
       drawSettingsWifi(updateCompleteDisplay);
       break;
-    case 8:
+    case SETTINGSCLOCK:
       drawSettingsClock(updateCompleteDisplay);
       break;
-    case 9:
+    case SETTINGSUNITS:
       drawSettingsUnits(updateCompleteDisplay);
       break;
-    case 10:
+    case SETTINGSO2:
       drawSettingsO2(updateCompleteDisplay);
       break;
     default:

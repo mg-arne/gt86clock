@@ -75,9 +75,8 @@ void drawLogo(bool updateCompleteDisplay)
      u8g2.sendBuffer(); 
      wifiManager.autoConnect("gt86clock");
      WiFi.hostname("gt86clock");
-     modeCurrent=CLOCK;
-     modeOld=CLOCK;
-     customDelay(1000);
+     modeCurrent=modeSaved;
+     delay(1000);
    }
 }
 

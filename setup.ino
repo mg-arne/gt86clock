@@ -1,22 +1,30 @@
-void setup(void) {   
+void setup(void) { \  
   u8g2.begin();// Oled display begins  
   u8g2.setFlipMode(1);
 
   Wire.begin();
 
   Serial.begin(115200);
+  
+  Serial.println("Serial OK");
    
   pinMode(A0,           INPUT);         // oil pressure
   pinMode(buttonPin1,   INPUT_PULLUP);  // muxed for the 3 buttons
   pinMode(buttonPin2,   INPUT_PULLUP);  // muxed for the 3 buttons
 
+  Serial.println("PINS1 ok");
+
   // falling = down = pressed
   // rising  = up   = release
   attachInterrupt(digitalPinToInterrupt(buttonPin1), handleInterruptPin1, CHANGE); 
   attachInterrupt(digitalPinToInterrupt(buttonPin2), handleInterruptPin2, CHANGE); 
+
+  Serial.println("PINS2 ok");
  
   EEPROM.begin(512);
   readConfig();
+
+   Serial.println("EEPROM ok");
 
   if(CAN0.begin(MCP_STDEXT, CAN_500KBPS, MCP_8MHZ) == CAN_OK)
   {
@@ -27,8 +35,10 @@ void setup(void) {
     customDelay(4000);
   }
 
+   Serial.println("CAN ok");
+
  // Can Hardware Filter  
-  CAN0.init_Mask(0,0,0x07FF0000);                
+  CAN0.init_Mask(0,0,0x0FF0000);                
   CAN0.init_Filt(0,0,0x07DF0000);                
   CAN0.init_Filt(1,0,0x07DF0000);                 
 
@@ -42,8 +52,11 @@ void setup(void) {
 
   wifi_station_set_hostname("gt86clock");
 
+  wifiManager.setConnectTimeout(5);
   wifiManager.setConfigPortalBlocking(false);
 
+  Serial.println("WIFI ok");
+  
   SPIFFS.begin();
   
   server.begin();
@@ -82,6 +95,16 @@ bool createJsonFile(String jsonFile) {
 }
 
 bool appendJsonFile(String jsonFile) { 
+
+  FSInfo fs_info;
+  SPIFFS.info(fs_info);
+  if ( ( fs_info.totalBytes - fs_info.usedBytes ) < 50 ) {
+     Dir dir = SPIFFS.openDir("/json");
+     if (dir.next())
+       SPIFFS.remove("/json/"+dir.fileName());
+     Serial.println("Removing /json/"+dir.fileName()+". SPIFFS is too full.");
+  }
+  
   File file = SPIFFS.open(jsonFile, "a");
 
   if(!file){
@@ -117,6 +140,10 @@ void readConfig(){
   addr++;
   EEPROM.get(addr,tmp);
   o2afr = bitRead(tmp,0);
+  addr++;
+  modeSaved = eepromReadInt(addr);
+  if ( modeSaved < CLOCK || modeSaved > MAXSCREENS-3 )
+      modeSaved = CLOCK;
 }
 
 void writeConfig(){
@@ -124,5 +151,22 @@ void writeConfig(){
   EEPROM.put(1, pressureBar);
   EEPROM.put(2, clock24h);
   EEPROM.put(3, o2afr);
+  eepromWriteInt(4, modeCurrent);
   EEPROM.commit();  
+}
+
+int eepromReadInt(int adr) {
+byte low, high;
+  low=EEPROM.read(adr);
+  high=EEPROM.read(adr+1);
+  return low + ((high << 8)&0xFF00);
+}
+
+void eepromWriteInt(int adr, int wert) {
+byte low, high;
+  low=wert&0xFF;
+  high=(wert>>8)&0xFF;
+  EEPROM.write(adr, low); 
+  EEPROM.write(adr+1, high);
+  return;
 }

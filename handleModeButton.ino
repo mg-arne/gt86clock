@@ -41,6 +41,7 @@ void handleModeButton()
     buttonPin1Pressed=-1; 
     buttonPin2Pressed=-1; 
     lastModeChange = millis();
+    writeConfig();
   }
 
   // mode button, long press

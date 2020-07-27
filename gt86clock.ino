@@ -42,7 +42,10 @@ strDateTime dateTime;
 #define OILCOOLANTTEMP 4
 #define OILPRESSURE 5
 #define O2 6
-#define SETTINGS 7
+#define SETTINGSWIFI 7
+#define SETTINGSCLOCK 8
+#define SETTINGSUNITS 9
+#define SETTINGSO2 10
 
 
 int buttonPin1=2;
@@ -54,6 +57,7 @@ int clockMinute=30;
 int coolantTemp=0;
 int modeCurrent=0;
 int modeOld=-1;
+int modeSaved=-1;
 int oilTemp=0;
 int lastModeChange=0;
 int lastTempUpdate=0;
@@ -72,7 +76,7 @@ bool readyForModeChange=true;
 bool updateCompleteDisplay=true;
 
 float afr=14.6;
-float voltage=-1;
+float voltage=0;
 float oilPressure;
 float oilPressureOld;
 float oilPressureOffset=114;
