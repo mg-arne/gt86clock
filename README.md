@@ -1,9 +1,9 @@
 # Scion FRS / Subaru BRZ / Toyota GT86 Enhanced Clock
 
 ## About
-It's a display, which replaces the stock clock of an Scion FRS / Subaru BRZ / Toyota GT86.
+GT86clock is a display, which replaces the stock clock of an Scion FRS / Subaru BRZ / Toyota GT86.
 
-It shows:
+It shows the:
 * time
 * oil tempurature
 * coolant tempurature
